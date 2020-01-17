@@ -1,8 +1,15 @@
 package org.bloomdex.datamcbaseface;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "measurement")
 public class Measurement {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
     private final int station_id;
     private final Date date;
@@ -106,6 +113,13 @@ public class Measurement {
         this.hail = hail;
         this.storm = storm;
         this.tornado = tornado;
+    }
+
+    /**
+     * @return The unique id of this measurement
+     */
+    public long getId() {
+        return id;
     }
 
     /**

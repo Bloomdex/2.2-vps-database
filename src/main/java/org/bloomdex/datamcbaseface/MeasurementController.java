@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MeasurementController
 {
-    @RequestMapping("/measurement.json")
+    private static final String api_prefix = "/api/v1/";
+
+    @RequestMapping(api_prefix + "weatherdata")
     public Measurement getTestMeasurement(
             @RequestParam(value = "station_id", defaultValue = "-1") long station_id,
             @RequestParam(value = "auth", defaultValue = "") String authentication)
