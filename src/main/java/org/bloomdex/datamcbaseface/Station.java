@@ -45,45 +45,51 @@ public class Station {
         this.elevation = elevation;
     }
 
-    /**
-     * @return The id of this station.
-     */
     public long getId() {
         return id;
     }
 
-    /**
-     * @return The name of this station.
-     */
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
-    /**
-     * @return The country this station resides in
-     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getCountry() {
         return country;
     }
 
-    /**
-     * @return The latitude of this station.
-     */
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     public double getLatitude() {
         return latitude;
     }
 
-    /**
-     * @return The Longitude of this station.
-     */
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
     public double getLongitude() {
         return longitude;
     }
 
-    /**
-     * @return Height of this station in meters.
-     */
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
     public double getElevation() {
         return elevation;
+    }
+
+    public void setElevation(double elevation) {
+        this.elevation = elevation;
     }
 }

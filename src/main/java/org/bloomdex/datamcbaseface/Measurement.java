@@ -115,136 +115,147 @@ public class Measurement {
         this.tornado = tornado;
     }
 
-    /**
-     * @return The unique id of this measurement
-     */
     public long getId() {
         return id;
     }
 
-    /**
-     * @return The station id this measurement belongs to
-     */
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public int getStation_id() {
         return station_id;
     }
 
-    /**
-     * @return The date that this measurement has been sent.
-     */
     public Date getDate() {
         return date;
     }
 
-    /**
-     * @return Measured temperature in degrees celsius.
-     */
     public float getTemperature() {
         return temperature;
     }
 
-    /**
-     * @return Dew point in degrees celsius.
-     */
+    public void setTemperature(float temperature) {
+        this.temperature = temperature;
+    }
+
     public float getDew_point() {
         return dew_point;
     }
 
-    /**
-     * @return Air pressure at station level in millibars (rounded to 1 decimal).
-     */
+    public void setDew_point(float dew_point) {
+        this.dew_point = dew_point;
+    }
+
     public float getAir_pressure_station() {
         return air_pressure_station;
     }
 
-    /**
-     * @return Air pressure at sea level in millibars (rounded to 1 decimal).
-     */
+    public void setAir_pressure_station(float air_pressure_station) {
+        this.air_pressure_station = air_pressure_station;
+    }
+
     public float getAir_pressure_sea() {
         return air_pressure_sea;
     }
 
-    /**
-     * @return Visibility in kilometers (rounded to 1 decimal).
-     */
+    public void setAir_pressure_sea(float air_pressure_sea) {
+        this.air_pressure_sea = air_pressure_sea;
+    }
+
     public float getVisibility() {
         return visibility;
     }
 
-    /**
-     * @return Wind speed in kilometers/hour (rounded to 1 decimal).
-     */
+    public void setVisibility(float visibility) {
+        this.visibility = visibility;
+    }
+
     public float getWind_speed() {
         return wind_speed;
     }
 
-    /**
-     * @return Wind direction in degrees 0-359
-     */
+    public void setWind_speed(float wind_speed) {
+        this.wind_speed = wind_speed;
+    }
+
     public float getWind_direction() {
         return wind_direction;
     }
 
-    /**
-     * @return Rainfall in centimeters (rounded to 1 decimal).
-     */
+    public void setWind_direction(float wind_direction) {
+        this.wind_direction = wind_direction;
+    }
+
     public float getRainfall() {
         return rainfall;
     }
 
-    /**
-     * @return Snowfall in centimeters (rounded to 1 decimal).
-     */
+    public void setRainfall(float rainfall) {
+        this.rainfall = rainfall;
+    }
+
     public float getSnowfall() {
         return snowfall;
     }
 
-    /**
-     * @return Cloud coverage in percentages 0.0-100 (rounded to 1 decimal).
-     */
+    public void setSnowfall(float snowfall) {
+        this.snowfall = snowfall;
+    }
+
     public short getCloud_coverage() {
         return cloud_coverage;
     }
 
-    /**
-     * @return Was it freezing?
-     */
+    public void setCloud_coverage(short cloud_coverage) {
+        this.cloud_coverage = cloud_coverage;
+    }
+
     public boolean isFreeze() {
         return freeze;
     }
 
-    /**
-     * @return Was it raining?
-     */
+    public void setFreeze(boolean freeze) {
+        this.freeze = freeze;
+    }
+
     public boolean isRain() {
         return rain;
     }
 
-    /**
-     * @return Was it snowing?
-     */
+    public void setRain(boolean rain) {
+        this.rain = rain;
+    }
+
     public boolean isSnow() {
         return snow;
     }
 
-    /**
-     * @return Was it hailing?
-     */
+    public void setSnow(boolean snow) {
+        this.snow = snow;
+    }
+
     public boolean isHail() {
         return hail;
     }
 
-    /**
-     * @return Was it storming?
-     */
+    public void setHail(boolean hail) {
+        this.hail = hail;
+    }
+
     public boolean isStorm() {
         return storm;
     }
 
-    /**
-     * @return Did a tornado occur?
-     */
+    public void setStorm(boolean storm) {
+        this.storm = storm;
+    }
+
     public boolean isTornado() {
         return tornado;
+    }
+
+    public void setTornado(boolean tornado) {
+        this.tornado = tornado;
     }
 }
