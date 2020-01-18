@@ -1,3 +1,29 @@
+create table IF NOT EXISTS USERS
+(
+	USERNAME VARCHAR_IGNORECASE(50) not null
+		primary key,
+	PASSWORD VARCHAR_IGNORECASE(500) not null,
+	ENABLED BOOLEAN not null
+);
+
+create table IF NOT EXISTS AUTHORITIES
+(
+	USERNAME VARCHAR_IGNORECASE(50) not null,
+	AUTHORITY VARCHAR_IGNORECASE(50) not null,
+	constraint IX_AUTH_USERNAME
+		unique (USERNAME, AUTHORITY),
+	constraint FK_AUTHORITIES_USERS
+		foreign key (USERNAME) references USERS
+);
+
+INSERT INTO USERS (USERNAME, PASSWORD, ENABLED)
+SELECT 'bloomdex-test-dummy', '$2a$10$uiobZor5m3YhDr/GhnxrmeaKN3A6lUptB5Ynv4PDhPCGVmhaIucHO', TRUE
+WHERE NOT EXISTS (SELECT * FROM USERS);
+
+INSERT INTO AUTHORITIES (USERNAME, AUTHORITY)
+SELECT 'bloomdex-test-dummy', 'ROLE_USER'
+WHERE NOT EXISTS (SELECT * FROM AUTHORITIES);
+
 TRUNCATE TABLE station;
 INSERT INTO `station` (`id`,`name`,`country`,`latitude`,`longitude`,`elevation`) VALUES 
  (10010,'JAN MAYEN','JAN MAYEN',70.933,-8.667,9),

@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.sql.DataSource;
@@ -41,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     /**
      * Configuration for users in the database.
      * @param builder
-     * @throws Exception
+     * @throws Exception Thrown when builder.jdbcAuthentication() fails.
      */
     @Override
     protected void configure(AuthenticationManagerBuilder builder) throws Exception {
@@ -49,8 +48,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 
         builder.jdbcAuthentication()
                 .dataSource(dataSource)
-                .withDefaultSchema()
-                .withUser(User.withUsername("bloomdex-test-dummy").password(passwordEncoder.encode("8pB5CYeXWmAPmMn8gS9W6Q5NApRR7QB82sDoCpUCB8MQ9auY")).roles("USER"))
                 .passwordEncoder(passwordEncoder);
     }
 }
