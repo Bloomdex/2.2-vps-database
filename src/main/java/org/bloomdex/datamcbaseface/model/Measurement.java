@@ -1,6 +1,7 @@
 package org.bloomdex.datamcbaseface.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -8,10 +9,12 @@ import java.util.Date;
 public class Measurement {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotNull
     private final int station_id;
+
     private final Date date;
     private float temperature;
     private float dew_point;
@@ -30,6 +33,8 @@ public class Measurement {
     private boolean hail;
     private boolean storm;
     private boolean tornado;
+
+    //region Constructors
 
     /***
      * Create an empty default measurement
@@ -114,6 +119,10 @@ public class Measurement {
         this.storm = storm;
         this.tornado = tornado;
     }
+
+    //endregion
+
+    //region Getters and Setters
 
     public long getId() {
         return id;
@@ -258,4 +267,6 @@ public class Measurement {
     public void setTornado(boolean tornado) {
         this.tornado = tornado;
     }
+
+    //endregion
 }

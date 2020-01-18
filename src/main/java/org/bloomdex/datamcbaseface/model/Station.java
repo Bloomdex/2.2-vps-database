@@ -3,18 +3,31 @@ package org.bloomdex.datamcbaseface.model;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "station")
 public class Station {
     @Id
+    @NotNull
     private long id;
 
+    @NotNull
     private String name;
+
+    @NotNull
     private String country;
+
+    @NotNull
     private double latitude;
+
+    @NotNull
     private double longitude;
+
+    @NotNull
     private double elevation;
+
+    //region Constructors
 
     /**
      * Create an empty default station
@@ -44,6 +57,10 @@ public class Station {
         this.longitude = longitude;
         this.elevation = elevation;
     }
+
+    //endregion
+
+    //region Getters and Setters
 
     public long getId() {
         return id;
@@ -92,4 +109,6 @@ public class Station {
     public void setElevation(double elevation) {
         this.elevation = elevation;
     }
+
+    //endregion
 }
