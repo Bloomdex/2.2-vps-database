@@ -1,4 +1,4 @@
-package org.bloomdex.datamcbaseface;
+package org.bloomdex.datamcbaseface.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

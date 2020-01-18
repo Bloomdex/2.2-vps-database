@@ -1,4 +1,7 @@
-package org.bloomdex.datamcbaseface;
+package org.bloomdex.datamcbaseface.controller;
+
+import org.bloomdex.datamcbaseface.model.Station;
+import org.bloomdex.datamcbaseface.repository.StationRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

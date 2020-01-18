@@ -1,5 +1,6 @@
-package org.bloomdex.datamcbaseface;
+package org.bloomdex.datamcbaseface.repository;
 
+import org.bloomdex.datamcbaseface.model.Station;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
