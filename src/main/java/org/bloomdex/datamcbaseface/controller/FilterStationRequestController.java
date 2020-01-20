@@ -19,7 +19,7 @@ public class FilterStationRequestController extends AbstractController {
      * @throws InvalidRequestException When an invalid connection-type is given.
      */
     @RequestMapping(api_prefix + "connection")
-    public Map getMeasurementById(@RequestParam(value = "type", defaultValue = "") String connectionType)
+    public Map requestConnectionType(@RequestParam(value = "type", defaultValue = "") String connectionType)
             throws InvalidRequestException
     {
         var returnMessage = new HashMap<String, Object>();
