@@ -3,6 +3,7 @@ package org.bloomdex.datamcbaseface.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import javax.annotation.security.RolesAllowed;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,8 +19,9 @@ public class FilterStationRequestController extends AbstractController {
      * @return A Map containing a message if the requested connection type succeeded or failed.
      * @throws InvalidRequestException When an invalid connection-type is given.
      */
+    @RolesAllowed("ROBOT")
     @RequestMapping(api_prefix + "connection")
-    public Map requestConnectionType(@RequestParam(value = "type", defaultValue = "") String connectionType)
+    public Map<String, Object> requestConnectionType(@RequestParam(value = "type", defaultValue = "") String connectionType)
             throws InvalidRequestException
     {
         var returnMessage = new HashMap<String, Object>();

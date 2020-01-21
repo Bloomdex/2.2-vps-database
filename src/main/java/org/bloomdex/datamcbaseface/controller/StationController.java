@@ -67,11 +67,12 @@ public class StationController extends AbstractController {
      * @return A list of weather-stations between the given latitudes and longitudes (in pages).
      */
     @RequestMapping(api_prefix + "paged/stations")
-    public Page<Station> getStationsBetweenCoordinates(Pageable pageable,
-                                                       @RequestParam(value = "min_latitude", defaultValue = "-1") double min_latitude,
-                                                       @RequestParam(value = "max_latitude", defaultValue = "-1") double max_latitude,
-                                                       @RequestParam(value = "min_longitude", defaultValue = "-1") double min_longitude,
-                                                       @RequestParam(value = "max_longitude", defaultValue = "-1") double max_longitude)
+    public Page<Station> getStationsBetweenCoordinates(
+            Pageable pageable,
+            @RequestParam(value = "min_latitude", defaultValue = "-1") double min_latitude,
+            @RequestParam(value = "max_latitude", defaultValue = "-1") double max_latitude,
+            @RequestParam(value = "min_longitude", defaultValue = "-1") double min_longitude,
+            @RequestParam(value = "max_longitude", defaultValue = "-1") double max_longitude)
     {
         return repo.findAllByLatitudeBetweenAndLongitudeBetween(pageable, min_latitude, max_latitude, min_longitude, max_longitude);
     }
