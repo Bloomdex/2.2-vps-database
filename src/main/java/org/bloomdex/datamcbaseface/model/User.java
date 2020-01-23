@@ -92,14 +92,6 @@ public class User implements Serializable {
         return authority_strings;
     }
 
-    /*public void setAuthorities(List<String> authorities) {
-        this.authorities.clear();
-
-        for (String authority_string : authorities) {
-            this.authorities.add(new Authority(this, authority_string));
-        }
-    }*/
-
     public void setAuthorities(Set<Authority> authorities){
         this.authorities = authorities;
     }
