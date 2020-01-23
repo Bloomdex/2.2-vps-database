@@ -1,17 +1,22 @@
 package org.bloomdex.datamcbaseface.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "AUTHORITIES")
+@JsonIgnoreProperties(value = { "username" }, allowGetters = false, allowSetters = true)
 public class Authority implements Serializable {
     @Id
-    @ManyToOne
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="username", nullable=false)
     private User username;
 
-    @Id
     @Column(columnDefinition = "VARCHAR_IGNORECASE(50)")
     private String authority;
 
@@ -53,6 +58,14 @@ public class Authority implements Serializable {
 
     public void setAuthority(String authority) {
         this.authority = authority;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     //endregion

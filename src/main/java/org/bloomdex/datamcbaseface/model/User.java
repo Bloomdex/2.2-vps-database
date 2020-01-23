@@ -1,12 +1,19 @@
 package org.bloomdex.datamcbaseface.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.bloomdex.datamcbaseface.config.SecurityConfig;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "USERS")
+@JsonIgnoreProperties(value = { "password" }, allowGetters = false, allowSetters = true)
 public class User implements Serializable {
     @Id
     @Column(columnDefinition = "VARCHAR_IGNORECASE(50)")
@@ -17,10 +24,9 @@ public class User implements Serializable {
     private String password;
 
     @NotNull
-    boolean enabled;
+    private boolean enabled;
 
-    @OneToMany
-    @JoinColumn(name = "username")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "username")
     private Set<Authority> authorities;
 
     //region Constructors
@@ -32,6 +38,7 @@ public class User implements Serializable {
         username = "UNKNOWN";
         password = "UNKNOWN";
         enabled = false;
+        authorities = new HashSet<>();
     }
 
     /**
@@ -44,6 +51,7 @@ public class User implements Serializable {
         this.username = username;
         this.password = password;
         this.enabled = enabled;
+        authorities = new HashSet<>();
     }
 
     //endregion
@@ -63,7 +71,7 @@ public class User implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = SecurityConfig.PasswordEncoder.encode(password);
     }
 
     public boolean isEnabled() {
@@ -72,6 +80,28 @@ public class User implements Serializable {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public List<String> getAuthorities() {
+        List<String> authority_strings = new ArrayList<>();
+
+        for (Authority authority : this.authorities) {
+            authority_strings.add(authority.getAuthority());
+        }
+
+        return authority_strings;
+    }
+
+    /*public void setAuthorities(List<String> authorities) {
+        this.authorities.clear();
+
+        for (String authority_string : authorities) {
+            this.authorities.add(new Authority(this, authority_string));
+        }
+    }*/
+
+    public void setAuthorities(Set<Authority> authorities){
+        this.authorities = authorities;
     }
 
     //endregion

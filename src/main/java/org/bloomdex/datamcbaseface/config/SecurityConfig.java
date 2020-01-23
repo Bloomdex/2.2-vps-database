@@ -16,6 +16,8 @@ import javax.sql.DataSource;
 @EnableGlobalMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter
 {
+    public static BCryptPasswordEncoder PasswordEncoder;
+
     private DataSource dataSource;
 
     /**
@@ -49,10 +51,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
      */
     @Override
     protected void configure(AuthenticationManagerBuilder builder) throws Exception {
-        var passwordEncoder = new BCryptPasswordEncoder();
+        PasswordEncoder = new BCryptPasswordEncoder();
 
         builder.jdbcAuthentication()
                 .dataSource(dataSource)
-                .passwordEncoder(passwordEncoder);
+                .passwordEncoder(PasswordEncoder);
     }
 }
