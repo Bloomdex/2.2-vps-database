@@ -76,4 +76,76 @@ public class StationController extends AbstractController {
     {
         return repo.findAllByLatitudeBetweenAndLongitudeBetween(pageable, min_latitude, max_latitude, min_longitude, max_longitude);
     }
+
+    /**
+     * Returns all stations paged in the given radius.
+     * @param pageable
+     * @param latitude The latitude where the weather-stations should be close to.
+     * @param longitude The longitude where the weather-stations should be close to.
+     * @param radius_km The radius in kilometers.
+     * @param radius_deg The radius in degrees.
+     * @return A paged list of stations.
+     */
+    @RequestMapping(api_prefix + "paged/stations/radius")
+    public Page<Station> getStationsInRadius(
+            Pageable pageable,
+            @RequestParam(value = "latitude", defaultValue = "-1") double latitude,
+            @RequestParam(value = "longitude", defaultValue = "-1") double longitude,
+            @RequestParam(value = "radius_km", required = false) Double radius_km,
+            @RequestParam(value = "radius_deg", required = false) Double radius_deg)
+            throws InvalidRequestException
+    {
+        double radius = 0;
+
+        if(radius_km == null && radius_deg == null)
+            throw new InvalidRequestException();
+        else if (radius_km != null && radius_deg != null)
+            throw new InvalidRequestException();
+        if(radius_km != null)
+            radius = radius_km / 111.11;
+        else
+            radius = radius_deg;
+
+        double min_latitude = latitude - radius;
+        double max_latitude = latitude + radius;
+        double min_longitude = longitude - radius;
+        double max_longitude = longitude + radius;
+
+        return repo.findAllByLatitudeBetweenAndLongitudeBetween(pageable, min_latitude, max_latitude, min_longitude, max_longitude);
+    }
+
+    /**
+     * Returns all stations in the given radius.
+     * @param latitude The latitude where the weather-stations should be close to.
+     * @param longitude The longitude where the weather-stations should be close to.
+     * @param radius_km The radius in kilometers.
+     * @param radius_deg The radius in degrees.
+     * @return A list of stations.
+     */
+    @RequestMapping(api_prefix + "stations/radius")
+    public List<Station> getStationsInRadius(
+            @RequestParam(value = "latitude", defaultValue = "-1") double latitude,
+            @RequestParam(value = "longitude", defaultValue = "-1") double longitude,
+            @RequestParam(value = "radius_km", required = false) Double radius_km,
+            @RequestParam(value = "radius_deg", required = false) Double radius_deg)
+            throws InvalidRequestException
+    {
+        double radius = 0;
+
+        if(radius_km == null && radius_deg == null)
+            throw new InvalidRequestException();
+        else if (radius_km != null && radius_deg != null)
+            throw new InvalidRequestException();
+        if(radius_km != null)
+            radius = radius_km / 111.11;
+        else
+            radius = radius_deg;
+
+        double min_latitude = latitude - radius;
+        double max_latitude = latitude + radius;
+        double min_longitude = longitude - radius;
+        double max_longitude = longitude + radius;
+
+        return repo.findAllByLatitudeBetweenAndLongitudeBetween(min_latitude, max_latitude, min_longitude, max_longitude);
+    }
 }

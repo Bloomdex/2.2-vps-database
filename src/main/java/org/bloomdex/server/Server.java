@@ -88,7 +88,7 @@ public class Server {
                 PRINT_INFO = true;
         }
 
-        System.setProperty("javax.net.ssl.keyStore", "keystore");
+        System.setProperty("javax.net.ssl.keyStore", "keystore.jks");
         System.setProperty("javax.net.ssl.keyStorePassword", "passphrase");
         createServerThread();
     }
