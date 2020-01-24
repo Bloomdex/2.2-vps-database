@@ -1,4 +1,4 @@
-package server;
+package org.bloomdex.server;
 
 import javax.net.ssl.*;
 import java.io.*;
@@ -19,10 +19,10 @@ public class Server {
      */
     private static void createServerThread() throws IOException {
         SSLServerSocket socket = createServerSocket();
-        if (Server.PRINT_INFO || !Server.PRINT_INFO) {
-            System.out.println("The server started on public IP-address " + getPublicIP());
-            System.out.println("The server started on port " + socket.getLocalPort());
-        }
+
+        System.out.println("The server started on public IP-address " + getPublicIP());
+        System.out.println("The server started on port " + socket.getLocalPort());
+
         try {
             while (true) {
                 new ServerThread(socket.accept()).start();
