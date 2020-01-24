@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.security.RolesAllowed;
 import java.net.URI;
+import java.util.Optional;
 
 @RolesAllowed("ADMIN")
 @RestController
@@ -90,4 +91,39 @@ public class UserController extends AbstractController {
         return ResponseEntity.created(location).build();
     }
 
+    /**
+     * Modify a user using a PUT with the following .json as a body:
+     *
+     * {
+     *     "password": "{password}",
+     *     "enabled": {enabled}
+     * }
+     *
+     * If you want to modify this users authorities take a look at AuthorityController instead.
+     *
+     * @param user The new information that should be added to this user.
+     * @param username the username of the user the data should be modified from.
+     * @return Query page for user information.
+     */
+    @PutMapping(api_prefix + "users/{username}/")
+    public ResponseEntity<Object> updateStudent(@RequestBody User user, @PathVariable String username)
+            throws InvalidRequestException
+    {
+        Optional<User> userOptional = repo.findById(username);
+
+        //Check if the PUT contains a username; Because it should not.
+        if(!user.getUsername().equals("UNKNOWN"))
+            throw new InvalidRequestException();
+
+        if (userOptional.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        user.setUsername(username);
+
+        repo.save(user);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand(user.getUsername()).toUri();
+
+        return ResponseEntity.created(location).build();
+    }
 }
