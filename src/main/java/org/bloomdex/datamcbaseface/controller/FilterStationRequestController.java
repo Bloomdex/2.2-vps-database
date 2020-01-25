@@ -1,5 +1,6 @@
 package org.bloomdex.datamcbaseface.controller;
 
+import org.bloomdex.server.Server;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+@RolesAllowed("ROBOT")
 @RestController
 public class FilterStationRequestController extends AbstractController {
     /**
@@ -19,15 +21,17 @@ public class FilterStationRequestController extends AbstractController {
      * @return A Map containing a message if the requested connection type succeeded or failed.
      * @throws InvalidRequestException When an invalid connection-type is given.
      */
-    @RolesAllowed("ROBOT")
     @RequestMapping(api_prefix + "connection")
-    public Map<String, Object> requestConnectionType(@RequestParam(value = "type", defaultValue = "") String connectionType)
+    public Map<String, Object> requestConnectionType(
+            @RequestParam(value = "type", defaultValue = "") String connectionType)
             throws InvalidRequestException
     {
-        var returnMessage = new HashMap<String, Object>();
+        Map<String, Object> returnMessage;
 
         if(connectionType.equals("request_connection"))
-            openConnection(returnMessage);
+            returnMessage = openConnection();
+        else if(connectionType.equals("stop_server"))
+            returnMessage = closeConnection();
         else
             throw new InvalidRequestException();
 
@@ -35,17 +39,51 @@ public class FilterStationRequestController extends AbstractController {
     }
 
     /**
-     * Temporary placeholder for opening a connection with a FilterStation.
-     * @param returnMessage A map containing key+values that should be returned when the given API is requested.
+     * Method that starts a server so a FilterStation can connect to it.
+     * @return A Map with information for FilterStation, to check if a connection is possible.
      */
-    private void openConnection(Map<String, Object> returnMessage){
+    private Map<String, Object> openConnection(){
+        HashMap<String, Object> returnMessage = new HashMap<>();
+
         try {
+            if(!Server.ServerRunning) {
+                System.setProperty("javax.net.ssl.keyStore", "keystore.jks");
+                System.setProperty("javax.net.ssl.keyStorePassword", "passphrase");
+
+                Server.createServerThread();
+            } else {
+                returnMessage.put("message", "Server already running.");
+            }
+
             returnMessage.put("response", "LISTENING");
             returnMessage.put("ip_address", getPublicIp());
-            returnMessage.put("port", 50000);
+            returnMessage.put("port", Server.port);
+
         } catch (Exception e) {
             returnMessage.put("response", "FAILED");
+            e.printStackTrace();
+            returnMessage.put("exception", e.toString());
         }
+
+        return returnMessage;
+    }
+
+    /**
+     * Method that stops the running data-collection server.
+     * @return A Map with information for the FilterStation, to check if the server has been stopped.
+     */
+    private Map<String, Object> closeConnection() {
+        HashMap<String, Object> returnMessage = new HashMap<>();
+
+        if(Server.ServerRunning) {
+            Server.ServerRunning = false;
+            returnMessage.put("response", "SUCCESS");
+        } else {
+            returnMessage.put("response", "FAILED");
+            returnMessage.put("message", "Server not running");
+        }
+
+        return returnMessage;
     }
 
     /**

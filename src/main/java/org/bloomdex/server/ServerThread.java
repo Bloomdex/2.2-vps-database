@@ -1,5 +1,8 @@
 package org.bloomdex.server;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.*;
 
@@ -8,6 +11,8 @@ public class ServerThread extends Thread {
     private DataInputStream dataInputStream;
     private byte[] data;
 
+    private static final Logger Logger = LoggerFactory.getLogger(ServerThread.class);
+
     /**
      * The constructor which sets the socket as a variable
      *
@@ -15,7 +20,7 @@ public class ServerThread extends Thread {
      */
     ServerThread(Socket socket){
         this.socket = socket;
-        System.out.println("new client accepted");
+        Logger.info("New data-sending client accepted.");
     }
 
     /**
@@ -42,8 +47,10 @@ public class ServerThread extends Thread {
                 System.out.print("\n");
                  */
             }
+
+            Logger.info("Closed connection with data-sending client.");
         } catch (IOException e) {
-            System.out.printf("exception: %s%n", e.getMessage());
+            Logger.error("Exception: " + e.getMessage());
         }
     }
 
