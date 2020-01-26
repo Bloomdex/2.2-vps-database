@@ -1,5 +1,7 @@
 package org.bloomdex.datamcbaseface.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -13,9 +15,11 @@ public class Measurement {
     private long id;
 
     @NotNull
-    private final int station_id;
+    private int stationId;
 
-    private final Date date;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private Date date;
+
     private float temperature;
     private float dew_point;
     private float air_pressure_station;
@@ -25,7 +29,7 @@ public class Measurement {
     private float wind_direction;
     private float rainfall;
     private float snowfall;
-    private short cloud_coverage;
+    private float cloud_coverage;
 
     private boolean freeze;
     private boolean rain;
@@ -40,7 +44,7 @@ public class Measurement {
      * Create an empty default measurement
      */
     public Measurement() {
-        station_id = 0;
+        stationId = 0;
         date = new Date();
         temperature = 0f;
         dew_point = 0f;
@@ -63,7 +67,7 @@ public class Measurement {
 
     /**
      * Create a measurement object.
-     * @param station_id The id of the station.
+     * @param stationId The id of the station.
      * @param date The date that this measurement has been sent.
      * @param temperature Temperature in degrees celsius.
      * @param dew_point Dew point in degrees celsius.
@@ -82,7 +86,7 @@ public class Measurement {
      * @param storm Was it storming?
      * @param tornado Did a tornado occur?
      */
-    public Measurement(int station_id,
+    public Measurement(int stationId,
                        Date date,
                        float temperature,
                        float dew_point,
@@ -93,14 +97,14 @@ public class Measurement {
                        float wind_direction,
                        float rainfall,
                        float snowfall,
-                       short cloud_coverage,
+                       float cloud_coverage,
                        boolean freeze,
                        boolean rain,
                        boolean snow,
                        boolean hail,
                        boolean storm,
                        boolean tornado) {
-        this.station_id = station_id;
+        this.stationId = stationId;
         this.date = date;
         this.temperature = temperature;
         this.dew_point = dew_point;
@@ -132,12 +136,20 @@ public class Measurement {
         this.id = id;
     }
 
-    public int getStation_id() {
-        return station_id;
+    public int getStationId() {
+        return stationId;
+    }
+
+    public void setStationId(int stationId) {
+        this.stationId =  stationId;
     }
 
     public Date getDate() {
         return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public float getTemperature() {
@@ -212,11 +224,11 @@ public class Measurement {
         this.snowfall = snowfall;
     }
 
-    public short getCloud_coverage() {
+    public float getCloud_coverage() {
         return cloud_coverage;
     }
 
-    public void setCloud_coverage(short cloud_coverage) {
+    public void setCloud_coverage(float cloud_coverage) {
         this.cloud_coverage = cloud_coverage;
     }
 

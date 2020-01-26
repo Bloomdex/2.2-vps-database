@@ -26,7 +26,7 @@ public class StationController extends AbstractController {
      * @throws InvalidRequestException Will be thrown when client parameters are invalid/
      * @throws NoEntriesFoundException Will be thrown when no valid station has been returned.
      */
-    @RequestMapping(api_prefix + "station/{station_id}/")
+    @RequestMapping(api_prefix + "stations/{station_id}/")
     public Station getStationById(
             @PathVariable long station_id)
             throws InvalidRequestException, NoEntriesFoundException
