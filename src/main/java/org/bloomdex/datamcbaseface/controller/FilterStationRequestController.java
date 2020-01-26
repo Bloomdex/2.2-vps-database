@@ -47,7 +47,7 @@ public class FilterStationRequestController extends AbstractController {
 
         try {
             if(!Server.ServerRunning) {
-                System.setProperty("javax.net.ssl.keyStore", "keystore.jks");
+                System.setProperty("javax.net.ssl.keyStore", "/var/datamcbaseface/keystore.jks");
                 System.setProperty("javax.net.ssl.keyStorePassword", "passphrase");
 
                 Server.createServerThread();
