@@ -5,6 +5,7 @@ import org.bloomdex.datamcbaseface.model.Measurement;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Converter {
@@ -21,13 +22,13 @@ public class Converter {
             ArrayList<Measurement> measurements = new ArrayList<>();
 
             for (int i = 0; i < dataInputStream.available() / 47; i++) {
-                var measurement = new Measurement();
+                Measurement measurement = new Measurement();
 
                 // Station ID
                 measurement.setStationId(dataInputStream.readInt());
 
                 // Date and time
-                var date = new java.util.Date((long)dataInputStream.readInt()*1000);
+                Date date = new java.util.Date((long)dataInputStream.readInt()*1000);
                 measurement.setDate(date);
 
                 // Temperature
@@ -55,7 +56,7 @@ public class Converter {
                 measurement.setSnowfall(dataInputStream.readFloat());
 
                 // Options
-                var events = dataInputStream.readByte();
+                byte events = dataInputStream.readByte();
                 if ((events & (1 << 0)) == (1 << 0));
                 if ((events & (1 << 1)) == (1 << 1));
                 measurement.setFreeze(  (events & (1 << 2)) == (1 << 2));

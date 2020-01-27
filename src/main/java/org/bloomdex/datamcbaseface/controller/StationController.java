@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -34,9 +35,9 @@ public class StationController extends AbstractController {
         if(station_id < 0)
             throw new InvalidRequestException();
 
-        var station = repo.findById(station_id);
+        Optional<Station> station = repo.findById(station_id);
 
-        if(station.isEmpty())
+        if(!station.isPresent())
             throw new NoEntriesFoundException();
 
         return station.get();

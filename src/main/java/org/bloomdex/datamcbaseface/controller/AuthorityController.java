@@ -1,6 +1,7 @@
 package org.bloomdex.datamcbaseface.controller;
 
 import org.bloomdex.datamcbaseface.model.Authority;
+import org.bloomdex.datamcbaseface.model.User;
 import org.bloomdex.datamcbaseface.repository.AuthorityRepository;
 import org.bloomdex.datamcbaseface.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class AuthorityController extends AbstractController {
             @PathVariable String username,
             @RequestParam(value = "role", defaultValue = "") String role) {
 
-        var user = userRepository.getOne(username);
+        User user = userRepository.getOne(username);
         repo.save(new Authority(user, role));
 
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path(api_prefix + "/users/{username}/")

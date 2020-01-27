@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 public class MeasurementController extends AbstractController
 {
@@ -31,9 +33,9 @@ public class MeasurementController extends AbstractController
         if(measurement_id < 0)
             throw new InvalidRequestException();
 
-        var measurement = repo.findById(measurement_id);
+        Optional<Measurement> measurement = repo.findById(measurement_id);
 
-        if(measurement.isEmpty())
+        if(!measurement.isPresent())
             throw new NoEntriesFoundException();
 
         return measurement.get();

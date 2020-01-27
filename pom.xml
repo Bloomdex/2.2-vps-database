@@ -15,7 +15,7 @@
 	<description>A database and our RESTful api implementation for a weather data management service</description>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>8</java.version>
 	</properties>
 
 	<dependencies>

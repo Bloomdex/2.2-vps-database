@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "AUTHORITIES")
+@Table(name = "AUTHORITIES", uniqueConstraints={@UniqueConstraint(columnNames = {"username" , "authority"})})
 @JsonIgnoreProperties(value = { "username" }, allowGetters = false, allowSetters = true)
 public class Authority implements Serializable {
     @Id

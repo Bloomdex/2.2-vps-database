@@ -34,9 +34,9 @@ public class UserController extends AbstractController {
         if(username.equals(""))
             throw new InvalidRequestException();
 
-        var user = repo.findById(username);
+        Optional<User> user = repo.findById(username);
 
-        if(user.isEmpty())
+        if(!user.isPresent())
             throw new NoEntriesFoundException();
 
         return user.get();
@@ -115,7 +115,7 @@ public class UserController extends AbstractController {
         if(!user.getUsername().equals("UNKNOWN"))
             throw new InvalidRequestException();
 
-        if (userOptional.isEmpty())
+        if (!userOptional.isPresent())
             return ResponseEntity.notFound().build();
 
         user.setUsername(username);
