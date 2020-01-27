@@ -1,6 +1,7 @@
 package org.bloomdex.datamcbaseface.controller;
 
 import org.bloomdex.server.Server;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,21 @@ import java.util.Map;
 @RolesAllowed("ROBOT")
 @RestController
 public class FilterStationRequestController extends AbstractController {
+
+    private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(FilterStationRequestController.class);
+    private final Server server;
+
+    /**
+     * Default constructor for FilterStationRequestController
+     */
+    public FilterStationRequestController() {
+        server = new Server(
+                25565,
+                "/var/datamcbaseface/keystore.jks",
+                "passphrase"
+        );
+    }
+
     /**
      * @param connectionType The type of connection that should be made with a server.
      * @return A Map containing a message if the requested connection type succeeded or failed.
@@ -46,22 +62,18 @@ public class FilterStationRequestController extends AbstractController {
         HashMap<String, Object> returnMessage = new HashMap<>();
 
         try {
-            if(!Server.ServerRunning) {
-                System.setProperty("javax.net.ssl.keyStore", "/var/datamcbaseface/keystore.jks");
-                System.setProperty("javax.net.ssl.keyStorePassword", "passphrase");
-
-                Server.createServerThread();
+            if(!server.isServerRunning()) {
+                new Thread(server).start();
             } else {
                 returnMessage.put("message", "Server already running.");
             }
 
             returnMessage.put("response", "LISTENING");
             returnMessage.put("ip_address", getPublicIp());
-            returnMessage.put("port", Server.port);
-
+            returnMessage.put("port", server.getPort());
         } catch (Exception e) {
             returnMessage.put("response", "FAILED");
-            e.printStackTrace();
+            Logger.error(e.getMessage());
             returnMessage.put("exception", e.toString());
         }
 
@@ -75,8 +87,8 @@ public class FilterStationRequestController extends AbstractController {
     private Map<String, Object> closeConnection() {
         HashMap<String, Object> returnMessage = new HashMap<>();
 
-        if(Server.ServerRunning) {
-            Server.ServerRunning = false;
+        if(server.isServerRunning()) {
+            server.stop();
             returnMessage.put("response", "SUCCESS");
         } else {
             returnMessage.put("response", "FAILED");

@@ -6,15 +6,31 @@ import org.slf4j.LoggerFactory;
 import javax.net.ssl.*;
 import java.io.*;
 
-public class Server {
+public class Server implements Runnable {
     public static boolean PRINT_INFO = false;
     private static final Logger Logger = LoggerFactory.getLogger(Server.class);
 
-    public static boolean ServerRunning = false;
-    public static int port = 25565;
+    private volatile boolean isServerRunning;
+    private SSLServerSocket serverSocket;
+
+    private final int port;
+    private final String keyStorePath;
+    private final String keyStorePass;
 
     private static final String[] protocols = new String[] {"TLSv1.3"};
     private static final String[] cipher_suites = new String[] {"TLS_AES_128_GCM_SHA256"};
+
+    /**
+     * Constructor for Server where a custom port, KeyStore path and KeyStore password can be set
+     * @param port The port the server should be running on.
+     * @param keyStorePath The path of the keystore.
+     * @param keyStorePass The password of the keystore.
+     */
+    public Server(int port, String keyStorePath, String keyStorePass) {
+        this.port = port;
+        this.keyStorePath = keyStorePath;
+        this.keyStorePass = keyStorePass;
+    }
 
     /**
      * Creates a server thread for every client
@@ -22,24 +38,40 @@ public class Server {
      *      something went wrong with creating the server socket
      *      something went wrong with getting the public IP of the server
      */
-    public static void createServerThread() throws IOException {
-        SSLServerSocket socket = createServerSocket();
-        Logger.info("The data-collection server started on port " + socket.getLocalPort());
+    public void createServerThread() throws IOException {
+        System.setProperty("javax.net.ssl.keyStore", keyStorePath);
+        System.setProperty("javax.net.ssl.keyStorePassword", keyStorePass);
+        serverSocket = createServerSocket();
 
         try {
-            ServerRunning = true;
+            Logger.info("The data-collection server started on port " + serverSocket.getLocalPort());
+            isServerRunning = true;
 
-            while (ServerRunning) {
-                new ServerThread(socket.accept()).start();
+            while (isServerRunning) {
+                new ServerThread(serverSocket.accept()).start();
             }
-
-            socket.close();
         } catch (Exception e) {
             Logger.error("Exception: " + e.getMessage());
+        } finally {
+            serverSocket.close();
         }
 
-        ServerRunning = false;
-        Logger.info("Data-collection server on port: " + port + "stopped.");
+        isServerRunning = false;
+        Logger.info("Stopped data-collection-server on port: " + port);
+    }
+
+    /**
+     * @return If this instance of a Server is running or not.
+     */
+    public boolean isServerRunning() {
+        return isServerRunning;
+    }
+
+    /**
+     * @return the Port the server (will be) running on.
+     */
+    public int getPort() {
+        return port;
     }
 
     /**
@@ -48,12 +80,40 @@ public class Server {
      * @return a SSL server socket
      * @throws IOException throws an exception if something went wrong with creating the SSL server socket
      */
-    private static SSLServerSocket createServerSocket() throws IOException {
+    private SSLServerSocket createServerSocket() throws IOException {
         SSLServerSocket socket = (SSLServerSocket) SSLServerSocketFactory.getDefault().createServerSocket(port);
         socket.setEnabledProtocols(protocols);
         socket.setEnabledCipherSuites(cipher_suites);
 
         return socket;
+    }
+
+    /**
+     * The implemented run method required to create a server thread.
+     */
+    @Override
+    public void run() {
+        try {
+            createServerThread();
+        } catch (IOException e) {
+            Logger.error(e.getMessage());
+        } finally {
+            isServerRunning = false;
+            Logger.info("Stopped Thread of data-collection-server.");
+        }
+    }
+
+    /**
+     * Method to stop the server from running.
+     */
+    public void stop() {
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            Logger.error(e.getMessage());
+        } finally {
+            isServerRunning = false;
+        }
     }
 
     /**
@@ -68,8 +128,11 @@ public class Server {
                 PRINT_INFO = true;
         }
 
-        System.setProperty("javax.net.ssl.keyStore", "/var/datamcbaseface/keystore.jks");
-        System.setProperty("javax.net.ssl.keyStorePassword", "passphrase");
-        createServerThread();
+        Server server = new Server(
+                25565,
+                "/var/datamcbaseface/keystore.jks",
+                "passphrase"
+        );
+        server.createServerThread();
     }
 }
