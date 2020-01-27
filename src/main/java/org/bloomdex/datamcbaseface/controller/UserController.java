@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -35,6 +37,18 @@ public class UserController extends AbstractController {
             throw new InvalidRequestException();
 
         Optional<User> user = repo.findById(username);
+
+        if(!user.isPresent())
+            throw new NoEntriesFoundException();
+
+        return user.get();
+    }
+
+    @RequestMapping(api_prefix + "me")
+    @RolesAllowed({"USER", "ADMIN"})
+    public User getCurrentUser() throws NoEntriesFoundException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Optional<User> user = repo.findById(authentication.getName());
 
         if(!user.isPresent())
             throw new NoEntriesFoundException();
