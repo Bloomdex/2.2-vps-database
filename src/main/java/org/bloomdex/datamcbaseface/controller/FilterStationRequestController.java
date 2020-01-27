@@ -2,6 +2,7 @@ package org.bloomdex.datamcbaseface.controller;
 
 import org.bloomdex.server.Server;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,10 @@ import java.util.Map;
 @RestController
 public class FilterStationRequestController extends AbstractController {
 
+    @Value("${bloomdex.server.keystore.filename}") private String keyStoreFileName;
+    @Value("${bloomdex.server.keystore.password}") private String keyStorePassword;
+    @Value("${bloomdex.server.port}") private int serverPort;
+
     private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(FilterStationRequestController.class);
     private final Server server;
 
@@ -26,9 +31,9 @@ public class FilterStationRequestController extends AbstractController {
      */
     public FilterStationRequestController() {
         server = new Server(
-                25565,
-                "/var/datamcbaseface/keystore.jks",
-                "passphrase"
+                serverPort,
+                "/var/datamcbaseface/" + keyStoreFileName,
+                keyStorePassword
         );
     }
 
