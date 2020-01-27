@@ -44,6 +44,19 @@ public class UserController extends AbstractController {
         return user.get();
     }
 
+    /**
+     * @return Information about the current user.
+     * EXAMPLE:
+     * {
+     *     "username": "USERNAME",
+     *     "enabled": true,
+     *     "authorities": [
+     *         "ROLE_USER"
+     *     ]
+     * }
+     *
+     * @throws NoEntriesFoundException If the current user somehow does not exist.
+     */
     @RequestMapping(api_prefix + "me")
     @RolesAllowed({"USER", "ADMIN"})
     public User getCurrentUser() throws NoEntriesFoundException {
