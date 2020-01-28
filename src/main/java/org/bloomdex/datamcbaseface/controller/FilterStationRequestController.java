@@ -1,6 +1,7 @@
 package org.bloomdex.datamcbaseface.controller;
 
 import org.bloomdex.datamcbaseface.config.properties.BloomdexProperties;
+import org.bloomdex.datamcbaseface.repository.MeasurementRepository;
 import org.bloomdex.server.Server;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,17 +28,21 @@ public class FilterStationRequestController extends AbstractController {
     /**
      * Default constructor for FilterStationRequestController
      */
-    public FilterStationRequestController(BloomdexProperties properties) {
+    public FilterStationRequestController(BloomdexProperties properties, MeasurementRepository measurementRepository) {
         String keyStoreFileName = properties.getKeyStoreFileName();
         String keyStorePassword = properties.getKeyStorePassword();
         int serverPort = properties.getPort();
 
         Logger.info("Configured port for data-collection-server is: " + serverPort);
 
+        if(measurementRepository == null)
+            throw new InvalidParameterException("MeasurementRepository should not be null!");
+
         server = new Server(
                 serverPort,
                 "/var/datamcbaseface/" + keyStoreFileName,
-                keyStorePassword
+                keyStorePassword,
+                measurementRepository
         );
     }
 

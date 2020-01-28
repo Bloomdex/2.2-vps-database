@@ -1,10 +1,13 @@
 package org.bloomdex.server;
 
+import org.bloomdex.datamcbaseface.model.Measurement;
+import org.bloomdex.datamcbaseface.repository.MeasurementRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.*;
+import java.util.List;
 
 public class ServerThread extends Thread {
     private final Socket socket;
@@ -13,13 +16,16 @@ public class ServerThread extends Thread {
 
     private static final Logger Logger = LoggerFactory.getLogger(ServerThread.class);
 
+    private MeasurementRepository repo;
+
     /**
      * The constructor which sets the socket as a variable
      *
      * @param socket the socket which receives the data
      */
-    ServerThread(Socket socket){
+    ServerThread(Socket socket, MeasurementRepository repo){
         this.socket = socket;
+        this.repo = repo;
         Logger.info("New data-sending client accepted.");
     }
 
@@ -34,18 +40,13 @@ public class ServerThread extends Thread {
                 if(length>0) {
                     data = new byte[length];
                     dataInputStream.readFully(data, 0, data.length);
-
-                    // need to be done!!!
-                    // notify the database code there is new data that can be inserted into the database
                 }
 
-                // prints the incoming data
-                /*
-                for (int x = 0; x <= length - 1; x++) {
-                    System.out.print((char)data[x]);
+                List<Measurement> measurements = Converter.InputStreamToMeasurements(data);
+
+                if(!measurements.isEmpty()) {
+                    repo.saveAll(measurements);
                 }
-                System.out.print("\n");
-                 */
             }
 
             Logger.info("Closed connection with data-sending client.");

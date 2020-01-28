@@ -281,4 +281,29 @@ public class Measurement {
     }
 
     //endregion
+
+    @Override
+    public String toString() {
+        return "Measurement{" +
+                "id=" + id +
+                ", stationId=" + stationId +
+                ", date=" + date +
+                ", temperature=" + temperature +
+                ", dew_point=" + dew_point +
+                ", air_pressure_station=" + air_pressure_station +
+                ", air_pressure_sea=" + air_pressure_sea +
+                ", visibility=" + visibility +
+                ", wind_speed=" + wind_speed +
+                ", wind_direction=" + wind_direction +
+                ", rainfall=" + rainfall +
+                ", snowfall=" + snowfall +
+                ", cloud_coverage=" + cloud_coverage +
+                ", freeze=" + freeze +
+                ", rain=" + rain +
+                ", snow=" + snow +
+                ", hail=" + hail +
+                ", storm=" + storm +
+                ", tornado=" + tornado +
+                '}';
+    }
 }

@@ -2,8 +2,10 @@ package org.bloomdex.server;
 
 import org.bloomdex.datamcbaseface.model.Measurement;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,12 +15,18 @@ public class Converter {
 
     /**
      * Converts a DataInputStream to a list of measurements
-     * @param dataInputStream The DataInputStream measurements should be retrieved from
+     * @param rawData The raw data as an array of bytes where measurements should be retrieved from
      * @return A List of measurements
      * @throws IOException
      */
-    public static List<Measurement> InputStreamToMeasurements(DataInputStream dataInputStream) throws IOException {
-        if(dataInputStream.available() % 47 == 0) {
+    public static List<Measurement> InputStreamToMeasurements(byte[] rawData) throws IOException {
+        if(rawData.length < 1) {
+            return new ArrayList<>();
+        }
+        else if(rawData.length % 47 == 0) {
+            InputStream inputStream = new ByteArrayInputStream(rawData);
+            DataInputStream dataInputStream = new DataInputStream(inputStream);
+
             ArrayList<Measurement> measurements = new ArrayList<>();
 
             for (int i = 0; i < dataInputStream.available() / 47; i++) {
@@ -77,6 +85,7 @@ public class Converter {
             }
 
             dataInputStream.close();
+            inputStream.close();
 
             return measurements;
         }

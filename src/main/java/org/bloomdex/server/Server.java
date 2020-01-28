@@ -1,5 +1,6 @@
 package org.bloomdex.server;
 
+import org.bloomdex.datamcbaseface.repository.MeasurementRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,16 +21,21 @@ public class Server implements Runnable {
     private static final String[] protocols = new String[] {"TLSv1.2"};
     private static final String[] cipher_suites = new String[] {"TLS_RSA_WITH_AES_128_CBC_SHA"};
 
+    private MeasurementRepository repository;
+
     /**
      * Constructor for Server where a custom port, KeyStore path and KeyStore password can be set
      * @param port The port the server should be running on.
      * @param keyStorePath The path of the keystore.
      * @param keyStorePass The password of the keystore.
      */
-    public Server(int port, String keyStorePath, String keyStorePass) {
+    public Server(int port, String keyStorePath, String keyStorePass, MeasurementRepository repo) {
         this.port = port;
         this.keyStorePath = keyStorePath;
         this.keyStorePass = keyStorePass;
+
+        if(repo != null)
+            this.repository = repo;
     }
 
     /**
@@ -48,7 +54,7 @@ public class Server implements Runnable {
             isServerRunning = true;
 
             while (isServerRunning) {
-                new ServerThread(serverSocket.accept()).start();
+                new ServerThread(serverSocket.accept(), repository).start();
             }
         } catch (Exception e) {
             Logger.error("Exception: " + e.getMessage());
@@ -131,7 +137,8 @@ public class Server implements Runnable {
         Server server = new Server(
                 25565,
                 "/var/datamcbaseface/keystore.jks",
-                "passphrase"
+                "passphrase",
+                null
         );
         server.createServerThread();
     }
