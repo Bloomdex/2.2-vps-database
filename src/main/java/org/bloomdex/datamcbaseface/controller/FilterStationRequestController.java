@@ -1,11 +1,12 @@
 package org.bloomdex.datamcbaseface.controller;
 
+import org.bloomdex.datamcbaseface.config.properties.BloomdexProperties;
 import org.bloomdex.server.Server;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import javax.annotation.security.RolesAllowed;
 
 import java.io.BufferedReader;
@@ -19,17 +20,17 @@ import java.util.Map;
 @RestController
 public class FilterStationRequestController extends AbstractController {
 
-    @Value("${bloomdex.server.keystore.filename}") private String keyStoreFileName;
-    @Value("${bloomdex.server.keystore.password}") private String keyStorePassword;
-    @Value("${bloomdex.server.port}") private int serverPort;
-
     private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(FilterStationRequestController.class);
     private final Server server;
 
     /**
      * Default constructor for FilterStationRequestController
      */
-    public FilterStationRequestController() {
+    public FilterStationRequestController(BloomdexProperties properties) {
+        String keyStoreFileName = properties.getKeyStoreFileName();
+        String keyStorePassword = properties.getKeyStorePassword();
+        int serverPort = properties.getPort();
+
         Logger.info("Configured port for data-collection-server is: " + serverPort);
 
         server = new Server(
@@ -76,7 +77,7 @@ public class FilterStationRequestController extends AbstractController {
             }
 
             returnMessage.put("response", "LISTENING");
-            returnMessage.put("ip_address", getPublicIp());
+            returnMessage.put("ipAddress", getPublicIp());
             returnMessage.put("port", server.getPort());
         } catch (Exception e) {
             returnMessage.put("response", "FAILED");
