@@ -17,8 +17,8 @@ public class Server implements Runnable {
     private final String keyStorePath;
     private final String keyStorePass;
 
-    private static final String[] protocols = new String[] {"TLSv1.3"};
-    private static final String[] cipher_suites = new String[] {"TLS_AES_128_GCM_SHA256"};
+    private static final String[] protocols = new String[] {"TLSv1.2"};
+    private static final String[] cipher_suites = new String[] {"TLS_RSA_WITH_AES_128_CBC_SHA"};
 
     /**
      * Constructor for Server where a custom port, KeyStore path and KeyStore password can be set
