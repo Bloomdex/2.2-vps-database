@@ -30,6 +30,8 @@ public class FilterStationRequestController extends AbstractController {
      * Default constructor for FilterStationRequestController
      */
     public FilterStationRequestController() {
+        Logger.info("Configured port for data-collection-server is: " + serverPort);
+
         server = new Server(
                 serverPort,
                 "/var/datamcbaseface/" + keyStoreFileName,
