@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Table(name = "measurement", indexes = {@Index(columnList = "date", name = "date_hidx")})
+@Table(name = "measurement", indexes = {@Index(columnList = "date", name = "date_hidx"), @Index(columnList = "stationId", name = "stationId_hidx")})
 public class Measurement {
 
     @Id
