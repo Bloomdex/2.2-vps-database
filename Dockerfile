@@ -15,4 +15,4 @@ COPY --from=build ${TARGET}/bloomdex-datamcbaseface.jar /app/bloomdex-datamcbase
 WORKDIR /app/
 EXPOSE 25565/tcp
 EXPOSE 8080/tcp
-ENTRYPOINT ["java", "-Dspring.config.location=/var/datamcbaseface/application.properties", "-jar", "bloomdex-datamcbaseface.jar"]
+ENTRYPOINT ["java", "-server", "-Dspring.config.location=/var/datamcbaseface/application.properties", "-jar", "bloomdex-datamcbaseface.jar"]

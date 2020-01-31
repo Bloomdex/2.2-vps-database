@@ -40,12 +40,11 @@ public class ServerThread extends Thread {
                 if(length>0) {
                     data = new byte[length];
                     dataInputStream.readFully(data, 0, data.length);
-                }
 
-                List<Measurement> measurements = Converter.InputStreamToMeasurements(data);
+                    List<Measurement> measurements = Converter.InputStreamToMeasurements(data);
 
-                if(!measurements.isEmpty()) {
-                    repo.saveAll(measurements);
+                    if(measurements != null)
+                        repo.saveAll(measurements);
                 }
             }
 

@@ -20,16 +20,21 @@ public class Converter {
      * @throws IOException
      */
     public static List<Measurement> InputStreamToMeasurements(byte[] rawData) throws IOException {
-        if(rawData.length < 1) {
-            return new ArrayList<>();
+        if(rawData == null)
+            return null;
+
+        int dataInputStreamLength = rawData.length;
+
+        if(dataInputStreamLength < 1) {
+            return null;
         }
-        else if(rawData.length % 47 == 0) {
+        else if(dataInputStreamLength % 47 == 0) {
             InputStream inputStream = new ByteArrayInputStream(rawData);
             DataInputStream dataInputStream = new DataInputStream(inputStream);
 
             ArrayList<Measurement> measurements = new ArrayList<>();
 
-            for (int i = 0; i < dataInputStream.available() / 47; i++) {
+            for (int i = 0; i < dataInputStreamLength / 47; i++) {
                 Measurement measurement = new Measurement();
 
                 // Station ID
