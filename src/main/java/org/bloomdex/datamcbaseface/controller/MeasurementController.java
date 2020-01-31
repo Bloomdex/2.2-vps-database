@@ -131,4 +131,26 @@ public class MeasurementController extends AbstractController
 
         return value;
     }
+
+    /**
+     * @param station_id The station information should be retrieved from.
+     * @return A list of averages per day for the last month from the given station.
+     * @throws InvalidRequestException When an invalid stationId has been given.
+     */
+    @RequestMapping(api_prefix + "stations/{station_id}/measurements/average/month")
+    public List<Map<String, Object>> getAverageMeasurementsGroupByDayFromLastMonthByStationId(
+            @PathVariable int station_id,
+            @RequestParam(value = "type", required = false) String type)
+            throws InvalidRequestException
+    {
+        if(station_id < 0)
+            throw new InvalidRequestException();
+
+        if(type == null)
+            return repo.getAverageLastMonthGroupByDayByStationId(station_id);
+        if(type.equalsIgnoreCase("vegaflor"))
+            return repo.getVegaflorSpecificationsLastMonthByStationId(station_id);
+        else
+            throw new InvalidRequestException();
+    }
 }

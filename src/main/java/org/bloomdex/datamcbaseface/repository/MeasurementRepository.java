@@ -25,8 +25,8 @@ public interface MeasurementRepository extends PagingAndSortingRepository<Measur
      * @return The average measurements for all stations between the given time
      */
     @Query("SELECT new map (stationId as stationId,\n" +
-            "       avg(air_pressure_sea) as airPressureSea,\n" +
-            "       avg(air_pressure_station) as airPressureStation,\n" +
+            "       AVG(air_pressure_sea) as airPressureSea,\n" +
+            "       AVG(air_pressure_station) as airPressureStation,\n" +
             "       AVG(cloud_coverage) as cloudCoverage,\n" +
             "       AVG(dew_point) as dewPoint,\n" +
             "       AVG(rainfall) as rainfall,\n" +
@@ -45,8 +45,8 @@ public interface MeasurementRepository extends PagingAndSortingRepository<Measur
      * @return The average measurement for the given station between the given time.
      */
     @Query("SELECT new map (stationId as stationId,\n" +
-            "       avg(air_pressure_sea) as airPressureSea,\n" +
-            "       avg(air_pressure_station) as airPressureStation,\n" +
+            "       AVG(air_pressure_sea) as airPressureSea,\n" +
+            "       AVG(air_pressure_station) as airPressureStation,\n" +
             "       AVG(cloud_coverage) as cloudCoverage,\n" +
             "       AVG(dew_point) as dewPoint,\n" +
             "       AVG(rainfall) as rainfall,\n" +
@@ -57,4 +57,47 @@ public interface MeasurementRepository extends PagingAndSortingRepository<Measur
             "       AVG(wind_speed) as windSpeed \n" +
             ") FROM Measurement WHERE date BETWEEN :firstDate AND :secondDate AND stationId=:stationId")
     Map<String, Object> getAverageBetweenDatesByStationId(Date firstDate, Date secondDate, int stationId);
+
+    /**
+     * @param stationId The station averages should be retrieved from.
+     * @return Averages per day from last month of the given station.
+     */
+    @Query("SELECT new map (stationId as stationId,\n" +
+            "EXTRACT (YEAR FROM DATE) AS year,\n" +
+            "EXTRACT (MONTH FROM DATE) AS month,\n" +
+            "EXTRACT (DAY FROM DATE) AS day,\n" +
+            "AVG(air_pressure_sea) as airPressureSea,\n" +
+            "AVG(air_pressure_station) as airPressureStation,\n" +
+            "AVG(cloud_coverage) as cloudCoverage,\n" +
+            "AVG(dew_point) as dewPoint,\n" +
+            "AVG(rainfall) as rainfall,\n" +
+            "AVG(snowfall) as snowfall,\n" +
+            "AVG(temperature) as temperature,\n" +
+            "AVG(visibility) as visibility,\n" +
+            "AVG(wind_direction) as windDirection,\n" +
+            "AVG(wind_speed) as windSpeed\n" +
+            ") FROM Measurement\n" +
+            "WHERE STATION_ID = :stationId AND date >= DATEADD('DAY', -30, CURRENT_DATE)\n" +
+            "GROUP BY year, month, day\n")
+    List<Map<String, Object>> getAverageLastMonthGroupByDayByStationId(int stationId);
+
+    /**
+     * @param stationId The station averages should be retrieved from.
+     * @return Stripped averages per spec according to requirements per day from last month of the given station.
+     */
+    @Query("SELECT new map (\n" +
+            "EXTRACT (YEAR FROM DATE) AS year,\n" +
+            "EXTRACT (MONTH FROM DATE) AS month,\n" +
+            "EXTRACT (DAY FROM DATE) AS day,\n" +
+            "AVG(dew_point) as avgDewPoint,\n" +
+            "AVG(temperature) as avgTemperature,\n" +
+            "MIN(temperature) as minTemperature,\n" +
+            "MAX(temperature) as maxTemperature,\n" +
+            "AVG(rainfall) as avgRainfall,\n" +
+            "MAX(rainfall) as maxRainfall,\n" +
+            "MIN(rainfall) as minRainfall)\n" +
+            "FROM Measurement\n" +
+            "WHERE STATION_ID = :stationId AND date >= DATEADD('DAY', -30, CURRENT_DATE)\n" +
+            "GROUP BY year, month, day\n")
+    List<Map<String, Object>> getVegaflorSpecificationsLastMonthByStationId(int stationId);
 }
