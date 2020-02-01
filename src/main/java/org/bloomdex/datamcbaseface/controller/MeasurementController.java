@@ -5,6 +5,7 @@ import org.bloomdex.datamcbaseface.model.TimeFrame;
 import org.bloomdex.datamcbaseface.repository.MeasurementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
@@ -152,5 +153,20 @@ public class MeasurementController extends AbstractController
             return repo.getVegaflorSpecificationsLastMonthByStationId(station_id);
         else
             throw new InvalidRequestException();
+    }
+
+    /**
+     * @param limit The amount of results that should be returned from the query.
+     * @return The most desirable circumstances for flowers to grow in south-america according to Vegaflor's specification.
+     */
+    @RequestMapping(api_prefix + "measurements/average/month/desirable")
+    public List<Map<String, Object>> getVegaflorMostDesirableByHumidityAndTemperature(
+            @RequestParam(value = "limit", required = false) Integer limit)
+    {
+        int maxResults = 10;
+        if(limit != null)
+            maxResults = limit;
+
+        return repo.getVegaflorMostDesirableByHumidityAndTemperature(PageRequest.of(0, maxResults));
     }
 }

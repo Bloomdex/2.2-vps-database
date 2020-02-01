@@ -100,4 +100,28 @@ public interface MeasurementRepository extends PagingAndSortingRepository<Measur
             "WHERE STATION_ID = :stationId AND date >= DATEADD('DAY', -30, CURRENT_DATE)\n" +
             "GROUP BY year, month, day\n")
     List<Map<String, Object>> getVegaflorSpecificationsLastMonthByStationId(int stationId);
+
+    /**
+     * @return The most desirable circumstances for flowers to grow in south-america according to Vegaflor's specification.
+     */
+    @Query(value = "SELECT new map (stationId as StationId,\n" +
+            "       AVG(dew_point) as avgDewPoint,\n" +
+            "       AVG(rainfall) as avgRainfall,\n" +
+            "       MAX(rainfall) as maxRainfall,\n" +
+            "       MIN(rainfall) as minRainfall,\n" +
+            "       AVG(temperature) as avgTemperature,\n" +
+            "       MAX(temperature) as maxTemperature,\n" +
+            "       MIN(temperature) as minTemperature,\n" +
+            "       100 * (EXP((17.625 * AVG(dew_point)) / (243.04 + AVG(dew_point))) / EXP((17.625 * AVG(temperature)) / (243.04 + AVG(temperature)))) as avgHumidity )\n" +
+            "FROM Measurement \n" +
+            "WHERE date >= DATEADD('DAY', -30, CURRENT_DATE)\n" +
+            "  AND stationId IN (\n" +
+            "      SELECT new map (id as stationId )\n" +
+            "          FROM Station\n" +
+            "          WHERE latitude BETWEEN -9.752 AND 16.215\n" +
+            "          AND longitude BETWEEN -84.375 AND -61.831)\n" +
+            "GROUP BY stationId\n" +
+            "ORDER BY ABS(100 * (EXP((17.625 * AVG(dew_point)) / (243.04 + AVG(dew_point))) / EXP((17.625 * AVG(temperature)) / (243.04 + AVG(temperature)))) - 80),\n" +
+            "         ABS(AVG(temperature) - 22.5)\n")
+    List<Map<String, Object>> getVegaflorMostDesirableByHumidityAndTemperature(Pageable page);
 }
