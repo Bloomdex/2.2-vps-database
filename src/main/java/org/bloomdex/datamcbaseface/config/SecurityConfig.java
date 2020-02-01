@@ -9,8 +9,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
+
+import static org.bloomdex.datamcbaseface.controller.AbstractController.api_prefix;
 
 @Configuration
 @EnableWebSecurity
@@ -33,7 +36,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 
     /**
      * Authentication setup.
-     * @param http
      * @throws Exception
      */
     @Override
@@ -45,6 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .authenticationEntryPoint(
                     (httpServletRequest, httpServletResponse, e)
                             -> httpServletResponse.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase()))
+                .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/" + api_prefix + "logout"))
+                .logoutSuccessHandler((httpServletRequest, httpServletResponse, authentication) -> httpServletResponse.setStatus(HttpStatus.OK.value()))
                 .and().cors()
                 .and().csrf().disable();
     }
