@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -138,7 +139,9 @@ public class MeasurementController extends AbstractController
      * @return A list of averages per day for the last month from the given station.
      * @throws InvalidRequestException When an invalid stationId has been given.
      */
-    @RequestMapping(api_prefix + "stations/{station_id}/measurements/average/month")
+    @RequestMapping(value = api_prefix + "stations/{station_id}/measurements/average/month",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public List<Map<String, Object>> getAverageMeasurementsGroupByDayFromLastMonthByStationId(
             @PathVariable int station_id,
             @RequestParam(value = "type", required = false) String type)
