@@ -133,3 +133,5 @@ Something similar to this should be returned by the server:
     ]
 }
 ```
+
+Take a look at the [query specifications](https://github.com/Bloomdex/2.2-vps-database/blob/master/documentation/database_queries_specification.pdf) to see what other queries are available to be used.
