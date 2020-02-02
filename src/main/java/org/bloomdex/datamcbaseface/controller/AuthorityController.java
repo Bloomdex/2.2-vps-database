@@ -46,7 +46,7 @@ public class AuthorityController extends AbstractController {
      * @param role the role that should be given to the user.
      * @return Location of retrieving information about this user.
      */
-    @PostMapping(path = api_prefix + "users/authority/{username}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = api_prefix + "users/authority/{username}")
     public ResponseEntity<Object> createAuthority(
             @PathVariable String username,
             @RequestParam(value = "role", defaultValue = "") String role) {
