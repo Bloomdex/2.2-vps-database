@@ -5,6 +5,7 @@ import org.bloomdex.datamcbaseface.repository.MeasurementRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.SSLException;
 import java.io.*;
 import java.net.*;
 import java.util.List;
@@ -26,7 +27,6 @@ public class ServerThread extends Thread {
     ServerThread(Socket socket, MeasurementRepository repo){
         this.socket = socket;
         this.repo = repo;
-        Logger.info("New data-sending client accepted.");
     }
 
     /**
@@ -43,13 +43,16 @@ public class ServerThread extends Thread {
 
                     List<Measurement> measurements = Converter.InputStreamToMeasurements(data);
 
-                    if(measurements != null)
+                    if(measurements != null) {
                         repo.saveAll(measurements);
+                        Logger.info("Add " + measurements.size() + " new measurements to the database.");
+                    }
                 }
             }
 
-            Logger.info("Closed connection with data-sending client.");
-        } catch (IOException e) {
+        }
+        catch (SSLException ignore) {}
+        catch (IOException e) {
             Logger.error("Exception: " + e.getMessage());
         }
     }
